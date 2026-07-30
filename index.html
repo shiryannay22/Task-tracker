@@ -201,25 +201,83 @@
 
   .tt-recur-date-wrap {
     display: none;
-    align-items: center;
-    gap: 7px;
+    flex-direction: column;
+    gap: 10px;
     border: 1.5px solid var(--accent2);
     background: var(--accent2-soft);
-    border-radius: 999px;
-    padding: 9px 15px;
-    color: var(--accent2);
+    border-radius: 14px;
+    padding: 12px 14px;
+    width: 100%;
   }
   .tt-recur-date-wrap.visible { display: flex; }
-  .tt-date-input {
-    border: none;
-    background: transparent;
+
+  .tt-recur-type-group { display: flex; gap: 6px; }
+  .tt-recur-type-btn {
+    border: 1.5px solid var(--accent2);
+    background: var(--surface);
+    color: var(--accent2);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tt-recur-type-btn.selected { background: var(--accent2); color: white; }
+
+  .tt-weekday-group { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tt-weekday-btn {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--muted);
     font-family: inherit;
     font-size: 13px;
     font-weight: 700;
-    color: var(--accent2);
     cursor: pointer;
   }
-  .tt-date-input:focus { outline: none; }
+  .tt-weekday-btn.selected { background: var(--accent2); color: white; border-color: transparent; }
+
+  .tt-monthday-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .tt-monthday-input {
+    width: 64px;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    text-align: center;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .tt-monthday-input:focus { outline: none; border-color: var(--accent2); }
+
+  .tt-recur-time-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .tt-time-input {
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .tt-time-input:focus { outline: none; border-color: var(--accent2); }
 
   .tt-submit-row { display: flex; gap: 8px; margin-top: 16px; align-items: center; }
   .tt-btn-primary {
@@ -326,6 +384,62 @@
     line-height: 1.5;
     white-space: pre-wrap;
   }
+
+  .tt-note-box {
+    margin-top: 12px;
+    background: var(--accent2-soft);
+    border: 1px solid #CFE0E9;
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .tt-note-box-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--accent2);
+    margin: 0 0 4px;
+  }
+  .tt-note-box-text {
+    font-size: 13.5px;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  .tt-note-edit-wrap { margin-top: 12px; }
+  .tt-note-edit-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--accent2);
+    margin: 0 0 5px;
+  }
+  .tt-note-textarea {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--accent2-soft);
+    resize: vertical;
+    min-height: 40px;
+    transition: border-color .15s;
+  }
+  .tt-note-textarea:focus { outline: none; border-color: var(--accent2); background: var(--surface); }
+  .tt-note-saved {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 4px 2px 0;
+    display: none;
+  }
+  .tt-note-saved.visible { display: block; }
 
   .tt-files {
     margin-top: 14px;
@@ -481,8 +595,29 @@
           <i data-lucide="repeat" size="14"></i>חוזרת
         </label>
         <div class="tt-recur-date-wrap" id="recur-date-wrap">
-          <i data-lucide="calendar" size="14"></i>
-          <input type="date" id="recur-date-input" class="tt-date-input" />
+          <div class="tt-recur-type-group" id="recur-type-group">
+            <button type="button" class="tt-recur-type-btn selected" data-type="weekly">שבועי</button>
+            <button type="button" class="tt-recur-type-btn" data-type="monthly">חודשי</button>
+          </div>
+          <div class="tt-weekday-group" id="recur-weekday-group">
+            <button type="button" class="tt-weekday-btn" data-day="0">א׳</button>
+            <button type="button" class="tt-weekday-btn" data-day="1">ב׳</button>
+            <button type="button" class="tt-weekday-btn" data-day="2">ג׳</button>
+            <button type="button" class="tt-weekday-btn" data-day="3">ד׳</button>
+            <button type="button" class="tt-weekday-btn" data-day="4">ה׳</button>
+            <button type="button" class="tt-weekday-btn" data-day="5">ו׳</button>
+            <button type="button" class="tt-weekday-btn" data-day="6">ש׳</button>
+          </div>
+          <div class="tt-monthday-wrap" id="recur-monthday-wrap" style="display:none">
+            <i data-lucide="calendar-days" size="14"></i>
+            <span>כל</span>
+            <input type="number" id="recur-monthday-input" class="tt-monthday-input" min="1" max="31" placeholder="1-31" />
+            <span>לחודש</span>
+          </div>
+          <div class="tt-recur-time-wrap">
+            <i data-lucide="clock" size="14"></i>
+            <input type="time" id="recur-time-input" class="tt-time-input" />
+          </div>
         </div>
       </div>
       <textarea id="desc-input" class="tt-textarea" placeholder="פרטים נוספים (רשות)..." rows="2"></textarea>
@@ -540,6 +675,11 @@
   let selectedUrgency = "medium";
   let tasksObj = {};
   let justCompletedId = null;
+  let selectedRecurType = "weekly";
+  let selectedRecurDay = 0;
+
+  const WEEKDAY_NAMES = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+  const WEEKDAY_SHORT = ["א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"];
 
   const form = document.getElementById("tt-form");
   const titleInput = document.getElementById("title-input");
@@ -547,7 +687,11 @@
   const recurringCheck = document.getElementById("recurring-check");
   const recurringLabel = document.getElementById("recurring-label");
   const recurDateWrap = document.getElementById("recur-date-wrap");
-  const recurDateInput = document.getElementById("recur-date-input");
+  const recurTypeGroup = document.getElementById("recur-type-group");
+  const recurWeekdayGroup = document.getElementById("recur-weekday-group");
+  const recurMonthdayWrap = document.getElementById("recur-monthday-wrap");
+  const recurMonthdayInput = document.getElementById("recur-monthday-input");
+  const recurTimeInput = document.getElementById("recur-time-input");
   const descInput = document.getElementById("desc-input");
   const formFilesList = document.getElementById("form-files-list");
   const formFileInput = document.getElementById("form-file-input");
@@ -569,8 +713,61 @@
     return `${d}/${m}`;
   }
 
+  function formatRecurrence(task) {
+    if (task.recurrenceType === "weekly" && task.recurrenceDay != null) {
+      let s = `כל יום ${WEEKDAY_NAMES[task.recurrenceDay]}`;
+      if (task.recurrenceTime) s += ` · ${task.recurrenceTime}`;
+      return s;
+    }
+    if (task.recurrenceType === "monthly" && task.recurrenceDay) {
+      let s = `כל ${task.recurrenceDay} לחודש`;
+      if (task.recurrenceTime) s += ` · ${task.recurrenceTime}`;
+      return s;
+    }
+    return "";
+  }
+
+  function lastScheduledOccurrence(task, now) {
+    const [th, tm] = (task.recurrenceTime || "00:00").split(":").map(Number);
+    if (task.recurrenceType === "weekly" && task.recurrenceDay != null) {
+      const diffDays = (now.getDay() - task.recurrenceDay + 7) % 7;
+      const candidate = new Date(now);
+      candidate.setDate(now.getDate() - diffDays);
+      candidate.setHours(th, tm, 0, 0);
+      if (candidate.getTime() > now.getTime()) candidate.setDate(candidate.getDate() - 7);
+      return candidate;
+    }
+    if (task.recurrenceType === "monthly" && task.recurrenceDay) {
+      const candidate = new Date(now.getFullYear(), now.getMonth(), 1, th, tm, 0, 0);
+      const lastDayThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      candidate.setDate(Math.min(task.recurrenceDay, lastDayThisMonth));
+      if (candidate.getTime() > now.getTime()) {
+        const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1, th, tm, 0, 0);
+        const lastDayPrevMonth = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
+        prevMonth.setDate(Math.min(task.recurrenceDay, lastDayPrevMonth));
+        return prevMonth;
+      }
+      return candidate;
+    }
+    return null;
+  }
+
+  function checkAndResetRecurringTasks(obj) {
+    const now = new Date();
+    Object.entries(obj).forEach(([id, task]) => {
+      if (!task.recurring || task.status !== "done") return;
+      const occurrence = lastScheduledOccurrence(task, now);
+      if (!occurrence) return;
+      const changedAt = task.statusChangedAt || 0;
+      if (changedAt < occurrence.getTime() && occurrence.getTime() <= now.getTime()) {
+        update(ref(db, "tasks/" + id), { status: "todo", statusChangedAt: Date.now() });
+      }
+    });
+  }
+
   onValue(tasksRef, (snapshot) => {
     tasksObj = snapshot.val() || {};
+    checkAndResetRecurringTasks(tasksObj);
     render();
   }, (err) => {
     console.error("Firebase read error:", err);
@@ -596,9 +793,27 @@
     setTimeout(() => {
       recurringLabel.classList.toggle("selected", recurringCheck.checked);
       recurDateWrap.classList.toggle("visible", recurringCheck.checked);
-      if (!recurringCheck.checked) recurDateInput.value = "";
     }, 0);
   });
+
+  recurTypeGroup.querySelectorAll(".tt-recur-type-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedRecurType = btn.dataset.type;
+      recurTypeGroup.querySelectorAll(".tt-recur-type-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      recurWeekdayGroup.style.display = selectedRecurType === "weekly" ? "flex" : "none";
+      recurMonthdayWrap.style.display = selectedRecurType === "monthly" ? "flex" : "none";
+    });
+  });
+
+  recurWeekdayGroup.querySelectorAll(".tt-weekday-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedRecurDay = parseInt(btn.dataset.day, 10);
+      recurWeekdayGroup.querySelectorAll(".tt-weekday-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    });
+  });
+  recurWeekdayGroup.querySelector('[data-day="0"]').classList.add("selected");
 
   function resetForm() {
     editingId = null;
@@ -607,7 +822,16 @@
     recurringCheck.checked = false;
     recurringLabel.classList.remove("selected");
     recurDateWrap.classList.remove("visible");
-    recurDateInput.value = "";
+    selectedRecurType = "weekly";
+    selectedRecurDay = 0;
+    recurTypeGroup.querySelectorAll(".tt-recur-type-btn").forEach(b => b.classList.remove("selected"));
+    recurTypeGroup.querySelector('[data-type="weekly"]').classList.add("selected");
+    recurWeekdayGroup.style.display = "flex";
+    recurMonthdayWrap.style.display = "none";
+    recurWeekdayGroup.querySelectorAll(".tt-weekday-btn").forEach(b => b.classList.remove("selected"));
+    recurWeekdayGroup.querySelector('[data-day="0"]').classList.add("selected");
+    recurMonthdayInput.value = "";
+    recurTimeInput.value = "";
     descInput.value = "";
     draftFiles = [];
     renderFormFiles();
@@ -641,7 +865,18 @@
     formError.style.display = "none";
     submitBtn.disabled = true;
     try {
-      const recurrenceDate = recurringCheck.checked ? (recurDateInput.value || null) : null;
+      const recurring = recurringCheck.checked;
+      const recurrenceType = recurring ? selectedRecurType : null;
+      const recurrenceDay = recurring
+        ? (selectedRecurType === "weekly" ? selectedRecurDay : (parseInt(recurMonthdayInput.value, 10) || null))
+        : null;
+      const recurrenceTime = recurring ? (recurTimeInput.value || null) : null;
+      if (recurring && selectedRecurType === "monthly" && !recurrenceDay) {
+        formError.querySelector("span").textContent = "צריך לבחור יום בחודש לחזרה.";
+        formError.style.display = "flex";
+        submitBtn.disabled = false;
+        return;
+      }
       const description = descInput.value.trim() || null;
       const filesObj = {};
       draftFiles.forEach((f) => {
@@ -651,17 +886,20 @@
       const filesPayload = Object.keys(filesObj).length ? filesObj : null;
       if (editingId) {
         await update(ref(db, "tasks/" + editingId), {
-          title, urgency: selectedUrgency, recurring: recurringCheck.checked, recurrenceDate, description, files: filesPayload
+          title, urgency: selectedUrgency, recurring, recurrenceType, recurrenceDay, recurrenceTime, description, files: filesPayload
         });
       } else {
         await push(tasksRef, {
           title,
           urgency: selectedUrgency,
-          recurring: recurringCheck.checked,
-          recurrenceDate,
+          recurring,
+          recurrenceType,
+          recurrenceDay,
+          recurrenceTime,
           description,
           files: filesPayload,
           status: "todo",
+          statusChangedAt: Date.now(),
           createdAt: Date.now(),
         });
       }
@@ -681,7 +919,18 @@
     recurringCheck.checked = !!task.recurring;
     recurringLabel.classList.toggle("selected", !!task.recurring);
     recurDateWrap.classList.toggle("visible", !!task.recurring);
-    recurDateInput.value = task.recurrenceDate || "";
+    selectedRecurType = task.recurrenceType || "weekly";
+    selectedRecurDay = selectedRecurType === "weekly" ? (task.recurrenceDay ?? 0) : 0;
+    recurTypeGroup.querySelectorAll(".tt-recur-type-btn").forEach(b => {
+      b.classList.toggle("selected", b.dataset.type === selectedRecurType);
+    });
+    recurWeekdayGroup.style.display = selectedRecurType === "weekly" ? "flex" : "none";
+    recurMonthdayWrap.style.display = selectedRecurType === "monthly" ? "flex" : "none";
+    recurWeekdayGroup.querySelectorAll(".tt-weekday-btn").forEach(b => {
+      b.classList.toggle("selected", parseInt(b.dataset.day, 10) === selectedRecurDay);
+    });
+    recurMonthdayInput.value = task.recurrenceType === "monthly" ? (task.recurrenceDay || "") : "";
+    recurTimeInput.value = task.recurrenceTime || "";
     descInput.value = task.description || "";
     draftFiles = task.files
       ? Object.values(task.files).map(f => ({ name: f.name, dataUrl: f.dataUrl, size: f.size, uploadedAt: f.uploadedAt }))
@@ -716,7 +965,7 @@
       justCompletedId = id;
       setTimeout(() => { justCompletedId = null; }, 500);
     }
-    update(ref(db, "tasks/" + id), { status });
+    update(ref(db, "tasks/" + id), { status, statusChangedAt: Date.now() });
   }
 
   const MAX_FILE_BYTES = 4 * 1024 * 1024; // 4MB per file
@@ -867,8 +1116,8 @@
       if (task.recurring) {
         const recChip = document.createElement("span");
         recChip.className = "tt-recur-chip";
-        const dateLabel = task.recurrenceDate ? " · " + formatDate(task.recurrenceDate) : "";
-        recChip.innerHTML = `<i data-lucide="repeat" size="12"></i>חוזרת${dateLabel}`;
+        const recLabel = formatRecurrence(task);
+        recChip.innerHTML = `<i data-lucide="repeat" size="12"></i>חוזרת${recLabel ? " · " + recLabel : ""}`;
         meta.appendChild(recChip);
       }
 
@@ -908,6 +1157,45 @@
           statusGroup.appendChild(btn);
         });
         card.appendChild(statusGroup);
+
+        const noteWrap = document.createElement("div");
+        noteWrap.className = "tt-note-edit-wrap";
+        const noteLabel = document.createElement("p");
+        noteLabel.className = "tt-note-edit-label";
+        noteLabel.innerHTML = '<i data-lucide="message-square" size="13"></i>הערה ליעל';
+        const noteTextarea = document.createElement("textarea");
+        noteTextarea.className = "tt-note-textarea";
+        noteTextarea.rows = 2;
+        noteTextarea.placeholder = "כתבי כאן הערה שיעל תראה...";
+        noteTextarea.value = task.employeeNote || "";
+        const savedLabel = document.createElement("p");
+        savedLabel.className = "tt-note-saved";
+        savedLabel.innerHTML = '<i data-lucide="check" size="11"></i> נשמר';
+        noteTextarea.addEventListener("blur", async () => {
+          const val = noteTextarea.value.trim();
+          if (val === (task.employeeNote || "")) return;
+          await update(ref(db, "tasks/" + id), { employeeNote: val || null });
+          savedLabel.classList.add("visible");
+          setTimeout(() => savedLabel.classList.remove("visible"), 1500);
+        });
+        noteWrap.appendChild(noteLabel);
+        noteWrap.appendChild(noteTextarea);
+        noteWrap.appendChild(savedLabel);
+        card.appendChild(noteWrap);
+      }
+
+      if (role === "manager" && task.employeeNote) {
+        const noteBox = document.createElement("div");
+        noteBox.className = "tt-note-box";
+        const noteBoxLabel = document.createElement("p");
+        noteBoxLabel.className = "tt-note-box-label";
+        noteBoxLabel.innerHTML = '<i data-lucide="message-square" size="13"></i>הערה משיר';
+        const noteBoxText = document.createElement("p");
+        noteBoxText.className = "tt-note-box-text";
+        noteBoxText.textContent = task.employeeNote;
+        noteBox.appendChild(noteBoxLabel);
+        noteBox.appendChild(noteBoxText);
+        card.appendChild(noteBox);
       }
 
       if (task.description) {
