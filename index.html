@@ -9,26 +9,30 @@
   @import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@400;500;600;700;800&display=swap');
 
   :root {
-    --paper: #F7F8FC;
+    --paper: #FFFFFF;
     --surface: #FFFFFF;
-    --ink: #262B3D;
-    --muted: #8890A6;
-    --line: #E7E9F2;
-    --accent: #6C5CE7;
-    --accent-soft: #F0EEFE;
-    --urgency-low: #16B87A;
-    --urgency-low-soft: #E4FAF1;
-    --urgency-medium: #F5A524;
-    --urgency-medium-soft: #FFF6E5;
-    --urgency-high: #F0466B;
-    --urgency-high-soft: #FDE9EE;
-    --status-todo: #9CA3C4;
-    --status-todo-soft: #F1F2F9;
-    --status-in_progress: #3E8BFF;
-    --status-in_progress-soft: #EAF2FF;
-    --status-done: #16B87A;
-    --status-done-soft: #E4FAF1;
-    --shadow: 0 4px 18px rgba(108, 92, 231, 0.06);
+    --ink: #1D3557;
+    --muted: #4A5D79;
+    --line: #E2E8EA;
+    --accent: #1D3557;
+    --accent-soft: #DDE4EA;
+    --accent2: #457B9D;
+    --accent2-soft: #E3EBF0;
+    --teal: #2E8388;
+    --teal-soft: #F1FAEE;
+    --urgency-low: var(--teal);
+    --urgency-low-soft: var(--teal-soft);
+    --urgency-medium: #457B9D;
+    --urgency-medium-soft: #E3EBF0;
+    --urgency-high: #E63946;
+    --urgency-high-soft: #FBE3E6;
+    --status-todo: #4A5D79;
+    --status-todo-soft: #E4E7EB;
+    --status-in_progress: #457B9D;
+    --status-in_progress-soft: #E3EBF0;
+    --status-done: var(--teal);
+    --status-done-soft: var(--teal-soft);
+    --shadow: 0 4px 18px rgba(29, 53, 87, 0.08);
   }
 
   * { box-sizing: border-box; }
@@ -68,7 +72,7 @@
     color: white;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.28);
+    box-shadow: 0 6px 16px rgba(29, 53, 87, 0.24);
   }
 
   .tt-toggle {
@@ -135,7 +139,26 @@
     background: var(--paper);
     transition: border-color .15s;
   }
-  .tt-input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+  .tt-input:focus { outline: none; border-color: var(--accent2); background: var(--surface); }
+
+  .tt-textarea {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper);
+    margin-top: 10px;
+    resize: vertical;
+    min-height: 44px;
+    transition: border-color .15s;
+  }
+  .tt-textarea:focus { outline: none; border-color: var(--accent2); background: var(--surface); }
+
+  .tt-form-files-section { margin-top: 10px; }
+  .tt-form-files-section .tt-file-row { margin-bottom: 6px; }
 
   .tt-pill-group { display: flex; gap: 6px; }
   .tt-pill {
@@ -170,9 +193,9 @@
     transition: all .15s;
   }
   .tt-recurring.selected {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: var(--accent-soft);
+    color: var(--accent2);
+    border-color: var(--accent2);
+    background: var(--accent2-soft);
   }
   .tt-recurring input { display: none; }
 
@@ -180,11 +203,11 @@
     display: none;
     align-items: center;
     gap: 7px;
-    border: 1.5px solid var(--accent);
-    background: var(--accent-soft);
+    border: 1.5px solid var(--accent2);
+    background: var(--accent2-soft);
     border-radius: 999px;
     padding: 9px 15px;
-    color: var(--accent);
+    color: var(--accent2);
   }
   .tt-recur-date-wrap.visible { display: flex; }
   .tt-date-input {
@@ -193,7 +216,7 @@
     font-family: inherit;
     font-size: 13px;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--accent2);
     cursor: pointer;
   }
   .tt-date-input:focus { outline: none; }
@@ -212,7 +235,7 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.28);
+    box-shadow: 0 6px 16px rgba(29, 53, 87, 0.24);
     transition: transform .1s;
   }
   .tt-btn-primary:hover { transform: translateY(-1px); }
@@ -272,7 +295,7 @@
   }
   .tt-card.done {
     background: var(--status-done-soft);
-    border-color: #BFEFDA;
+    border-color: #D3ECC9;
   }
   .tt-card.done .tt-card-title {
     text-decoration: line-through;
@@ -281,7 +304,7 @@
   .tt-card.pulse { animation: tt-pop .4s ease; }
   @keyframes tt-pop {
     0% { transform: scale(1); }
-    40% { transform: scale(1.02); box-shadow: 0 10px 24px rgba(22,184,122,0.25); }
+    40% { transform: scale(1.02); box-shadow: 0 10px 24px rgba(46,131,136,0.25); }
     100% { transform: scale(1); }
   }
 
@@ -295,6 +318,68 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
+
+  .tt-card-desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin: 6px 0 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  .tt-files {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .tt-files-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .tt-file-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+  }
+  .tt-file-row svg { color: var(--accent2); flex-shrink: 0; }
+  .tt-file-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tt-file-progress {
+    font-size: 12px;
+    color: var(--accent2);
+    font-weight: 700;
+  }
+  .tt-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1.5px dashed var(--accent2);
+    color: var(--accent2);
+    background: var(--accent2-soft);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tt-upload-btn:hover { background: #D3E3EA; }
   .tt-card-actions { display: flex; gap: 2px; flex-shrink: 0; }
   .tt-icon-btn {
     border: none;
@@ -306,7 +391,7 @@
     display: flex; align-items: center; justify-content: center;
     transition: background .15s, color .15s;
   }
-  .tt-icon-btn:hover { background: var(--accent-soft); color: var(--accent); }
+  .tt-icon-btn:hover { background: var(--accent2-soft); color: var(--accent2); }
   .tt-icon-btn.danger:hover { background: var(--urgency-high-soft); color: var(--urgency-high); }
 
   .tt-meta { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
@@ -322,8 +407,8 @@
   .tt-recur-chip {
     font-size: 12px;
     font-weight: 700;
-    color: var(--accent);
-    background: var(--accent-soft);
+    color: var(--accent2);
+    background: var(--accent2-soft);
     padding: 5px 11px 5px 9px;
     border-radius: 999px;
     display: flex;
@@ -400,6 +485,14 @@
           <input type="date" id="recur-date-input" class="tt-date-input" />
         </div>
       </div>
+      <textarea id="desc-input" class="tt-textarea" placeholder="פרטים נוספים (רשות)..." rows="2"></textarea>
+      <div class="tt-form-files-section">
+        <div id="form-files-list"></div>
+        <label class="tt-upload-btn">
+          <i data-lucide="upload" size="13"></i><span>הוסיפי קובץ</span>
+          <input type="file" id="form-file-input" multiple style="display:none">
+        </label>
+      </div>
       <div class="tt-submit-row">
         <button type="submit" class="tt-btn-primary" id="submit-btn"><i data-lucide="plus" size="16"></i><span id="submit-btn-text">הוסיפי משימה</span></button>
         <button type="button" class="tt-btn-ghost" id="cancel-btn" style="display:none"><i data-lucide="x" size="14"></i>ביטול</button>
@@ -432,9 +525,9 @@
   const tasksRef = ref(db, "tasks");
 
   const URGENCY = {
-    low: { label: "נמוכה", color: "var(--urgency-low)", soft: "var(--urgency-low-soft)", icon: "arrow-down" },
-    medium: { label: "בינונית", color: "var(--urgency-medium)", soft: "var(--urgency-medium-soft)", icon: "minus" },
-    high: { label: "גבוהה", color: "var(--urgency-high)", soft: "var(--urgency-high-soft)", icon: "flame" },
+    low: { label: "נמוכה", color: "var(--urgency-low)", soft: "var(--urgency-low-soft)", icon: "arrow-down", pillBg: "#F1FAEE", pillText: "var(--ink)" },
+    medium: { label: "בינונית", color: "var(--urgency-medium)", soft: "var(--urgency-medium-soft)", icon: "minus", pillBg: "var(--urgency-medium)", pillText: "white" },
+    high: { label: "גבוהה", color: "var(--urgency-high)", soft: "var(--urgency-high-soft)", icon: "flame", pillBg: "var(--urgency-high)", pillText: "white" },
   };
   const STATUS = {
     todo: { label: "לא התחיל", color: "var(--status-todo)", soft: "var(--status-todo-soft)", icon: "circle" },
@@ -455,6 +548,9 @@
   const recurringLabel = document.getElementById("recurring-label");
   const recurDateWrap = document.getElementById("recur-date-wrap");
   const recurDateInput = document.getElementById("recur-date-input");
+  const descInput = document.getElementById("desc-input");
+  const formFilesList = document.getElementById("form-files-list");
+  const formFileInput = document.getElementById("form-file-input");
   const submitBtn = document.getElementById("submit-btn");
   const submitBtnText = document.getElementById("submit-btn-text");
   const cancelBtn = document.getElementById("cancel-btn");
@@ -486,9 +582,13 @@
       urgencyGroup.querySelectorAll(".tt-pill").forEach(b => {
         b.classList.remove("selected");
         b.style.background = "";
+        b.style.color = "";
+        b.style.borderColor = "";
       });
       btn.classList.add("selected");
-      btn.style.background = URGENCY[selectedUrgency].color;
+      btn.style.background = URGENCY[selectedUrgency].pillBg;
+      btn.style.color = URGENCY[selectedUrgency].pillText;
+      btn.style.borderColor = selectedUrgency === "low" ? "var(--urgency-low)" : "transparent";
     });
   });
 
@@ -508,13 +608,20 @@
     recurringLabel.classList.remove("selected");
     recurDateWrap.classList.remove("visible");
     recurDateInput.value = "";
+    descInput.value = "";
+    draftFiles = [];
+    renderFormFiles();
     urgencyGroup.querySelectorAll(".tt-pill").forEach(b => {
       b.classList.remove("selected");
       b.style.background = "";
+      b.style.color = "";
+      b.style.borderColor = "";
     });
     const medBtn = urgencyGroup.querySelector('[data-urgency="medium"]');
     medBtn.classList.add("selected");
-    medBtn.style.background = URGENCY.medium.color;
+    medBtn.style.background = URGENCY.medium.pillBg;
+    medBtn.style.color = URGENCY.medium.pillText;
+    medBtn.style.borderColor = "transparent";
     formTitle.innerHTML = '<i data-lucide="sparkles" size="16"></i>משימה חדשה';
     submitBtnText.textContent = "הוסיפי משימה";
     cancelBtn.style.display = "none";
@@ -535,9 +642,16 @@
     submitBtn.disabled = true;
     try {
       const recurrenceDate = recurringCheck.checked ? (recurDateInput.value || null) : null;
+      const description = descInput.value.trim() || null;
+      const filesObj = {};
+      draftFiles.forEach((f) => {
+        const key = push(ref(db, "tasks/_keygen/files")).key;
+        filesObj[key] = { name: f.name, dataUrl: f.dataUrl, size: f.size, uploadedAt: f.uploadedAt };
+      });
+      const filesPayload = Object.keys(filesObj).length ? filesObj : null;
       if (editingId) {
         await update(ref(db, "tasks/" + editingId), {
-          title, urgency: selectedUrgency, recurring: recurringCheck.checked, recurrenceDate
+          title, urgency: selectedUrgency, recurring: recurringCheck.checked, recurrenceDate, description, files: filesPayload
         });
       } else {
         await push(tasksRef, {
@@ -545,6 +659,8 @@
           urgency: selectedUrgency,
           recurring: recurringCheck.checked,
           recurrenceDate,
+          description,
+          files: filesPayload,
           status: "todo",
           createdAt: Date.now(),
         });
@@ -566,12 +682,21 @@
     recurringLabel.classList.toggle("selected", !!task.recurring);
     recurDateWrap.classList.toggle("visible", !!task.recurring);
     recurDateInput.value = task.recurrenceDate || "";
+    descInput.value = task.description || "";
+    draftFiles = task.files
+      ? Object.values(task.files).map(f => ({ name: f.name, dataUrl: f.dataUrl, size: f.size, uploadedAt: f.uploadedAt }))
+      : [];
+    renderFormFiles();
     urgencyGroup.querySelectorAll(".tt-pill").forEach(b => {
       b.classList.remove("selected");
       b.style.background = "";
+      b.style.color = "";
+      b.style.borderColor = "";
       if (b.dataset.urgency === task.urgency) {
         b.classList.add("selected");
-        b.style.background = URGENCY[task.urgency].color;
+        b.style.background = URGENCY[task.urgency].pillBg;
+        b.style.color = URGENCY[task.urgency].pillText;
+        b.style.borderColor = task.urgency === "low" ? "var(--urgency-low)" : "transparent";
       }
     });
     formTitle.innerHTML = '<i data-lucide="pencil-line" size="16"></i>עריכת משימה';
@@ -592,6 +717,70 @@
       setTimeout(() => { justCompletedId = null; }, 500);
     }
     update(ref(db, "tasks/" + id), { status });
+  }
+
+  const MAX_FILE_BYTES = 4 * 1024 * 1024; // 4MB per file
+  let draftFiles = []; // {name, dataUrl, size, uploadedAt}
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("read failed"));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderFormFiles() {
+    formFilesList.innerHTML = "";
+    draftFiles.forEach((f, index) => {
+      const row = document.createElement("div");
+      row.className = "tt-file-row";
+      const fileIcon = document.createElement("i");
+      fileIcon.setAttribute("data-lucide", "file-text");
+      fileIcon.setAttribute("size", "15");
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "tt-file-name";
+      nameSpan.textContent = f.name;
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "tt-icon-btn danger";
+      delBtn.innerHTML = '<i data-lucide="x" size="14"></i>';
+      delBtn.addEventListener("click", () => {
+        draftFiles.splice(index, 1);
+        renderFormFiles();
+      });
+      row.appendChild(fileIcon);
+      row.appendChild(nameSpan);
+      row.appendChild(delBtn);
+      formFilesList.appendChild(row);
+    });
+    icons();
+  }
+
+  async function handleFormFileSelect(fileList) {
+    for (const file of Array.from(fileList)) {
+      if (file.size > MAX_FILE_BYTES) {
+        alert(`הקובץ "${file.name}" גדול מדי (מעל 4MB). אפשר לכווץ/לצלם ברזולוציה נמוכה יותר ולנסות שוב.`);
+        continue;
+      }
+      try {
+        const dataUrl = await readFileAsDataUrl(file);
+        draftFiles.push({ name: file.name, dataUrl, size: file.size, uploadedAt: Date.now() });
+      } catch (err) {
+        alert(`קריאת הקובץ "${file.name}" נכשלה, נסי שוב.`);
+      }
+    }
+    renderFormFiles();
+  }
+
+  formFileInput.addEventListener("change", (e) => {
+    handleFormFileSelect(e.target.files);
+    e.target.value = "";
+  });
+
+  function deleteFile(taskId, fileId) {
+    remove(ref(db, `tasks/${taskId}/files/${fileId}`));
   }
 
   btnManager.addEventListener("click", () => {
@@ -719,6 +908,56 @@
           statusGroup.appendChild(btn);
         });
         card.appendChild(statusGroup);
+      }
+
+      if (task.description) {
+        const descEl = document.createElement("p");
+        descEl.className = "tt-card-desc";
+        descEl.textContent = task.description;
+        card.appendChild(descEl);
+      }
+
+      const filesSection = document.createElement("div");
+      filesSection.className = "tt-files";
+
+      const fileEntries = task.files ? Object.entries(task.files) : [];
+
+      if (fileEntries.length > 0) {
+        const filesHeader = document.createElement("div");
+        filesHeader.className = "tt-files-header";
+        filesHeader.innerHTML = `<i data-lucide="paperclip" size="13"></i><span>קבצים מצורפים (${fileEntries.length})</span>`;
+        filesSection.appendChild(filesHeader);
+
+        fileEntries.forEach(([fileId, f]) => {
+          const row = document.createElement("div");
+          row.className = "tt-file-row";
+          const fileIcon = document.createElement("i");
+          fileIcon.setAttribute("data-lucide", "file-text");
+          fileIcon.setAttribute("size", "15");
+          const nameSpan = document.createElement("span");
+          nameSpan.className = "tt-file-name";
+          nameSpan.textContent = f.name;
+          const dlLink = document.createElement("a");
+          dlLink.href = f.dataUrl;
+          dlLink.download = f.name;
+          dlLink.className = "tt-icon-btn";
+          dlLink.innerHTML = '<i data-lucide="download" size="14"></i>';
+          row.appendChild(fileIcon);
+          row.appendChild(nameSpan);
+          row.appendChild(dlLink);
+          if (role === "manager") {
+            const delBtn = document.createElement("button");
+            delBtn.className = "tt-icon-btn danger";
+            delBtn.innerHTML = '<i data-lucide="x" size="14"></i>';
+            delBtn.addEventListener("click", () => deleteFile(id, fileId));
+            row.appendChild(delBtn);
+          }
+          filesSection.appendChild(row);
+        });
+      }
+
+      if (filesSection.childNodes.length > 0) {
+        card.appendChild(filesSection);
       }
 
       taskList.appendChild(card);
