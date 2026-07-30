@@ -1051,6 +1051,9 @@
     const order = { high: 0, medium: 1, low: 2 };
     entries.sort((a, b) => {
       const ta = a[1], tb = b[1];
+      const aDone = ta.status === "done" ? 1 : 0;
+      const bDone = tb.status === "done" ? 1 : 0;
+      if (aDone !== bDone) return aDone - bDone;
       if (order[ta.urgency] !== order[tb.urgency]) return order[ta.urgency] - order[tb.urgency];
       return (tb.createdAt || 0) - (ta.createdAt || 0);
     });
