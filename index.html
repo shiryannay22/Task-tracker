@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>לוח משימות</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --paper: #F7F8FC;
+    --surface: #FFFFFF;
+    --ink: #262B3D;
+    --muted: #8890A6;
+    --line: #E7E9F2;
+    --accent: #6C5CE7;
+    --accent-soft: #F0EEFE;
+    --urgency-low: #16B87A;
+    --urgency-low-soft: #E4FAF1;
+    --urgency-medium: #F5A524;
+    --urgency-medium-soft: #FFF6E5;
+    --urgency-high: #F0466B;
+    --urgency-high-soft: #FDE9EE;
+    --status-todo: #9CA3C4;
+    --status-todo-soft: #F1F2F9;
+    --status-in_progress: #3E8BFF;
+    --status-in_progress-soft: #EAF2FF;
+    --status-done: #16B87A;
+    --status-done-soft: #E4FAF1;
+    --shadow: 0 4px 18px rgba(108, 92, 231, 0.06);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Assistant', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+
+  svg.lucide { stroke-width: 2px; }
+
+  .tt-header {
+    max-width: 780px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .tt-title-wrap { display: flex; align-items: center; gap: 12px; }
+  .tt-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 27px;
+    margin: 0;
+    color: var(--ink);
+  }
+  .tt-icon-badge {
+    width: 44px; height: 44px;
+    border-radius: 13px;
+    background: var(--accent);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.28);
+  }
+
+  .tt-toggle {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px;
+    gap: 4px;
+    box-shadow: var(--shadow);
+  }
+  .tt-toggle button {
+    border: none;
+    background: transparent;
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background .15s, color .15s;
+  }
+  .tt-toggle button.active { background: var(--accent); color: white; }
+
+  .tt-container { max-width: 780px; margin: 0 auto; }
+
+  .tt-form {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 26px;
+    box-shadow: var(--shadow);
+  }
+  .tt-form-title {
+    font-weight: 800;
+    font-size: 15.5px;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+  }
+  .tt-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .tt-input-wrap {
+    flex: 1 1 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .tt-input-wrap svg { position: absolute; right: 14px; color: var(--muted); pointer-events: none; }
+  .tt-input {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 42px 12px 14px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color .15s;
+  }
+  .tt-input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+
+  .tt-pill-group { display: flex; gap: 6px; }
+  .tt-pill {
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    border-radius: 999px;
+    padding: 10px 15px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .15s;
+  }
+  .tt-pill.selected { color: white; border-color: transparent; }
+
+  .tt-recurring {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--paper);
+    transition: all .15s;
+  }
+  .tt-recurring.selected {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .tt-recurring input { display: none; }
+
+  .tt-recur-date-wrap {
+    display: none;
+    align-items: center;
+    gap: 7px;
+    border: 1.5px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+    padding: 9px 15px;
+    color: var(--accent);
+  }
+  .tt-recur-date-wrap.visible { display: flex; }
+  .tt-date-input {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .tt-date-input:focus { outline: none; }
+
+  .tt-submit-row { display: flex; gap: 8px; margin-top: 16px; align-items: center; }
+  .tt-btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.28);
+    transition: transform .1s;
+  }
+  .tt-btn-primary:hover { transform: translateY(-1px); }
+  .tt-btn-primary:disabled { opacity: .6; cursor: default; transform: none; }
+  .tt-btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--line);
+    color: var(--muted);
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tt-error {
+    color: var(--urgency-high);
+    font-size: 13px;
+    margin: 12px 0 0;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tt-section-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 800;
+    margin: 0 0 12px 2px;
+    letter-spacing: .2px;
+  }
+
+  .tt-empty {
+    background: var(--surface);
+    border: 1.5px dashed var(--line);
+    border-radius: 18px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .tt-empty svg { margin-bottom: 8px; color: var(--muted); }
+
+  .tt-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    border-right: 4px solid var(--urgency-color);
+  }
+  .tt-card.done {
+    background: var(--status-done-soft);
+    border-color: #BFEFDA;
+  }
+  .tt-card.done .tt-card-title {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .tt-card.pulse { animation: tt-pop .4s ease; }
+  @keyframes tt-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.02); box-shadow: 0 10px 24px rgba(22,184,122,0.25); }
+    100% { transform: scale(1); }
+  }
+
+  .tt-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .tt-card-title { font-weight: 700; font-size: 15.5px; margin: 0; color: var(--ink); display: flex; align-items: center; gap: 7px; }
+  .tt-done-badge {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--status-done);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .tt-card-actions { display: flex; gap: 2px; flex-shrink: 0; }
+  .tt-icon-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s;
+  }
+  .tt-icon-btn:hover { background: var(--accent-soft); color: var(--accent); }
+  .tt-icon-btn.danger:hover { background: var(--urgency-high-soft); color: var(--urgency-high); }
+
+  .tt-meta { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  .tt-chip {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 11px 5px 9px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tt-recur-chip {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 5px 11px 5px 9px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .tt-status-group { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+  .tt-status-pill {
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .15s;
+  }
+  .tt-status-pill.selected { border-color: transparent; }
+  .tt-status-readonly {
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 5px 12px 5px 10px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  @media (max-width: 480px) {
+    .tt-title { font-size: 22px; }
+    .tt-row { flex-direction: column; align-items: stretch; }
+    .tt-pill-group { justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="tt-header">
+    <div class="tt-title-wrap">
+      <div class="tt-icon-badge"><i data-lucide="clipboard-list" size="22"></i></div>
+      <p class="tt-title">לוח משימות</p>
+    </div>
+    <div class="tt-toggle">
+      <button id="btn-manager" class="active"><i data-lucide="user-cog" size="15"></i>יעל</button>
+      <button id="btn-employee"><i data-lucide="user" size="15"></i>שיר</button>
+    </div>
+  </div>
+
+  <div class="tt-container">
+    <form class="tt-form" id="tt-form">
+      <p class="tt-form-title" id="form-title"><i data-lucide="sparkles" size="16"></i>משימה חדשה</p>
+      <div class="tt-row">
+        <div class="tt-input-wrap">
+          <input class="tt-input" id="title-input" placeholder="שם המשימה..." />
+          <i data-lucide="pencil-line" size="16"></i>
+        </div>
+        <div class="tt-pill-group" id="urgency-group">
+          <button type="button" class="tt-pill" data-urgency="low"><i data-lucide="arrow-down" size="14"></i>נמוכה</button>
+          <button type="button" class="tt-pill selected" data-urgency="medium" style="background: var(--urgency-medium)"><i data-lucide="minus" size="14"></i>בינונית</button>
+          <button type="button" class="tt-pill" data-urgency="high"><i data-lucide="flame" size="14"></i>גבוהה</button>
+        </div>
+        <label class="tt-recurring" id="recurring-label">
+          <input type="checkbox" id="recurring-check" />
+          <i data-lucide="repeat" size="14"></i>חוזרת
+        </label>
+        <div class="tt-recur-date-wrap" id="recur-date-wrap">
+          <i data-lucide="calendar" size="14"></i>
+          <input type="date" id="recur-date-input" class="tt-date-input" />
+        </div>
+      </div>
+      <div class="tt-submit-row">
+        <button type="submit" class="tt-btn-primary" id="submit-btn"><i data-lucide="plus" size="16"></i><span id="submit-btn-text">הוסיפי משימה</span></button>
+        <button type="button" class="tt-btn-ghost" id="cancel-btn" style="display:none"><i data-lucide="x" size="14"></i>ביטול</button>
+      </div>
+      <p class="tt-error" id="form-error"><i data-lucide="alert-circle" size="14"></i><span>צריך לתת שם למשימה לפני השמירה.</span></p>
+    </form>
+
+    <p class="tt-section-label" id="section-label">כל המשימות (0)</p>
+    <div id="task-list"></div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import {
+    getDatabase, ref, push, onValue, update, remove
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAgyjruelxRDy7DDLh3rjb_RFV0eqQHiJY",
+    authDomain: "tasks-5745a.firebaseapp.com",
+    databaseURL: "https://tasks-5745a-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "tasks-5745a",
+    storageBucket: "tasks-5745a.firebasestorage.app",
+    messagingSenderId: "235402824952",
+    appId: "1:235402824952:web:20e4ea0e349793faf87f0d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const tasksRef = ref(db, "tasks");
+
+  const URGENCY = {
+    low: { label: "נמוכה", color: "var(--urgency-low)", soft: "var(--urgency-low-soft)", icon: "arrow-down" },
+    medium: { label: "בינונית", color: "var(--urgency-medium)", soft: "var(--urgency-medium-soft)", icon: "minus" },
+    high: { label: "גבוהה", color: "var(--urgency-high)", soft: "var(--urgency-high-soft)", icon: "flame" },
+  };
+  const STATUS = {
+    todo: { label: "לא התחיל", color: "var(--status-todo)", soft: "var(--status-todo-soft)", icon: "circle" },
+    in_progress: { label: "בתהליך", color: "var(--status-in_progress)", soft: "var(--status-in_progress-soft)", icon: "loader" },
+    done: { label: "הושלם", color: "var(--status-done)", soft: "var(--status-done-soft)", icon: "check-circle-2" },
+  };
+
+  let role = "manager";
+  let editingId = null;
+  let selectedUrgency = "medium";
+  let tasksObj = {};
+  let justCompletedId = null;
+
+  const form = document.getElementById("tt-form");
+  const titleInput = document.getElementById("title-input");
+  const urgencyGroup = document.getElementById("urgency-group");
+  const recurringCheck = document.getElementById("recurring-check");
+  const recurringLabel = document.getElementById("recurring-label");
+  const recurDateWrap = document.getElementById("recur-date-wrap");
+  const recurDateInput = document.getElementById("recur-date-input");
+  const submitBtn = document.getElementById("submit-btn");
+  const submitBtnText = document.getElementById("submit-btn-text");
+  const cancelBtn = document.getElementById("cancel-btn");
+  const formTitle = document.getElementById("form-title");
+  const formError = document.getElementById("form-error");
+  const taskList = document.getElementById("task-list");
+  const sectionLabel = document.getElementById("section-label");
+  const btnManager = document.getElementById("btn-manager");
+  const btnEmployee = document.getElementById("btn-employee");
+
+  function icons() { if (window.lucide) window.lucide.createIcons(); }
+  icons();
+
+  function formatDate(isoDate) {
+    const [y, m, d] = isoDate.split("-");
+    return `${d}/${m}`;
+  }
+
+  onValue(tasksRef, (snapshot) => {
+    tasksObj = snapshot.val() || {};
+    render();
+  }, (err) => {
+    console.error("Firebase read error:", err);
+  });
+
+  urgencyGroup.querySelectorAll(".tt-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedUrgency = btn.dataset.urgency;
+      urgencyGroup.querySelectorAll(".tt-pill").forEach(b => {
+        b.classList.remove("selected");
+        b.style.background = "";
+      });
+      btn.classList.add("selected");
+      btn.style.background = URGENCY[selectedUrgency].color;
+    });
+  });
+
+  recurringLabel.addEventListener("click", () => {
+    setTimeout(() => {
+      recurringLabel.classList.toggle("selected", recurringCheck.checked);
+      recurDateWrap.classList.toggle("visible", recurringCheck.checked);
+      if (!recurringCheck.checked) recurDateInput.value = "";
+    }, 0);
+  });
+
+  function resetForm() {
+    editingId = null;
+    titleInput.value = "";
+    selectedUrgency = "medium";
+    recurringCheck.checked = false;
+    recurringLabel.classList.remove("selected");
+    recurDateWrap.classList.remove("visible");
+    recurDateInput.value = "";
+    urgencyGroup.querySelectorAll(".tt-pill").forEach(b => {
+      b.classList.remove("selected");
+      b.style.background = "";
+    });
+    const medBtn = urgencyGroup.querySelector('[data-urgency="medium"]');
+    medBtn.classList.add("selected");
+    medBtn.style.background = URGENCY.medium.color;
+    formTitle.innerHTML = '<i data-lucide="sparkles" size="16"></i>משימה חדשה';
+    submitBtnText.textContent = "הוסיפי משימה";
+    cancelBtn.style.display = "none";
+    formError.style.display = "none";
+    icons();
+  }
+
+  cancelBtn.addEventListener("click", resetForm);
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const title = titleInput.value.trim();
+    if (!title) {
+      formError.style.display = "flex";
+      return;
+    }
+    formError.style.display = "none";
+    submitBtn.disabled = true;
+    try {
+      const recurrenceDate = recurringCheck.checked ? (recurDateInput.value || null) : null;
+      if (editingId) {
+        await update(ref(db, "tasks/" + editingId), {
+          title, urgency: selectedUrgency, recurring: recurringCheck.checked, recurrenceDate
+        });
+      } else {
+        await push(tasksRef, {
+          title,
+          urgency: selectedUrgency,
+          recurring: recurringCheck.checked,
+          recurrenceDate,
+          status: "todo",
+          createdAt: Date.now(),
+        });
+      }
+      resetForm();
+    } catch (err) {
+      formError.querySelector("span").textContent = "השמירה נכשלה, נסי שוב.";
+      formError.style.display = "flex";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  function startEdit(id, task) {
+    editingId = id;
+    titleInput.value = task.title;
+    selectedUrgency = task.urgency;
+    recurringCheck.checked = !!task.recurring;
+    recurringLabel.classList.toggle("selected", !!task.recurring);
+    recurDateWrap.classList.toggle("visible", !!task.recurring);
+    recurDateInput.value = task.recurrenceDate || "";
+    urgencyGroup.querySelectorAll(".tt-pill").forEach(b => {
+      b.classList.remove("selected");
+      b.style.background = "";
+      if (b.dataset.urgency === task.urgency) {
+        b.classList.add("selected");
+        b.style.background = URGENCY[task.urgency].color;
+      }
+    });
+    formTitle.innerHTML = '<i data-lucide="pencil-line" size="16"></i>עריכת משימה';
+    submitBtnText.textContent = "עדכני משימה";
+    cancelBtn.style.display = "flex";
+    titleInput.focus();
+    icons();
+  }
+
+  function deleteTask(id) {
+    remove(ref(db, "tasks/" + id));
+    if (editingId === id) resetForm();
+  }
+
+  function setStatus(id, status) {
+    if (status === "done") {
+      justCompletedId = id;
+      setTimeout(() => { justCompletedId = null; }, 500);
+    }
+    update(ref(db, "tasks/" + id), { status });
+  }
+
+  btnManager.addEventListener("click", () => {
+    role = "manager";
+    btnManager.classList.add("active");
+    btnEmployee.classList.remove("active");
+    render();
+  });
+  btnEmployee.addEventListener("click", () => {
+    role = "employee";
+    btnEmployee.classList.add("active");
+    btnManager.classList.remove("active");
+    render();
+  });
+
+  function render() {
+    form.style.display = role === "manager" ? "block" : "none";
+    const entries = Object.entries(tasksObj);
+    const order = { high: 0, medium: 1, low: 2 };
+    entries.sort((a, b) => {
+      const ta = a[1], tb = b[1];
+      if (order[ta.urgency] !== order[tb.urgency]) return order[ta.urgency] - order[tb.urgency];
+      return (tb.createdAt || 0) - (ta.createdAt || 0);
+    });
+
+    sectionLabel.textContent = role === "manager"
+      ? `כל המשימות (${entries.length})`
+      : `המשימות שלך (${entries.length})`;
+
+    taskList.innerHTML = "";
+
+    if (entries.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "tt-empty";
+      empty.innerHTML = `<i data-lucide="inbox" size="26"></i><div>${role === "manager" ? "אין עדיין משימות. הוסיפי משימה ראשונה למעלה." : "יעל עוד לא הוסיפה משימות."}</div>`;
+      taskList.appendChild(empty);
+      icons();
+      return;
+    }
+
+    entries.forEach(([id, task]) => {
+      const card = document.createElement("div");
+      card.className = "tt-card" + (task.status === "done" ? " done" : "");
+      if (justCompletedId === id) card.classList.add("pulse");
+      card.style.setProperty("--urgency-color", URGENCY[task.urgency].color);
+
+      const top = document.createElement("div");
+      top.className = "tt-card-top";
+      const titleEl = document.createElement("p");
+      titleEl.className = "tt-card-title";
+      if (task.status === "done") {
+        titleEl.innerHTML = '<span class="tt-done-badge"><i data-lucide="check" size="13"></i></span>';
+      }
+      titleEl.appendChild(document.createTextNode(task.title));
+      top.appendChild(titleEl);
+
+      if (role === "manager") {
+        const actions = document.createElement("div");
+        actions.className = "tt-card-actions";
+        const editBtn = document.createElement("button");
+        editBtn.className = "tt-icon-btn";
+        editBtn.innerHTML = '<i data-lucide="pencil" size="15"></i>';
+        editBtn.addEventListener("click", () => startEdit(id, task));
+        const delBtn = document.createElement("button");
+        delBtn.className = "tt-icon-btn danger";
+        delBtn.innerHTML = '<i data-lucide="trash-2" size="15"></i>';
+        delBtn.addEventListener("click", () => deleteTask(id));
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+        top.appendChild(actions);
+      }
+      card.appendChild(top);
+
+      const meta = document.createElement("div");
+      meta.className = "tt-meta";
+      const urg = URGENCY[task.urgency];
+      const urgChip = document.createElement("span");
+      urgChip.className = "tt-chip";
+      urgChip.style.background = urg.soft;
+      urgChip.style.color = urg.color;
+      urgChip.innerHTML = `<i data-lucide="${urg.icon}" size="12"></i>דחיפות ${urg.label}`;
+      meta.appendChild(urgChip);
+
+      if (task.recurring) {
+        const recChip = document.createElement("span");
+        recChip.className = "tt-recur-chip";
+        const dateLabel = task.recurrenceDate ? " · " + formatDate(task.recurrenceDate) : "";
+        recChip.innerHTML = `<i data-lucide="repeat" size="12"></i>חוזרת${dateLabel}`;
+        meta.appendChild(recChip);
+      }
+
+      if (role === "manager") {
+        const st = STATUS[task.status];
+        const statusChip = document.createElement("span");
+        statusChip.className = "tt-status-readonly";
+        if (task.status === "done") {
+          statusChip.style.background = st.color;
+          statusChip.style.color = "white";
+        } else {
+          statusChip.style.background = st.soft;
+          statusChip.style.color = st.color;
+        }
+        statusChip.innerHTML = `<i data-lucide="${st.icon}" size="12"></i>${st.label}`;
+        meta.appendChild(statusChip);
+      }
+      card.appendChild(meta);
+
+      if (role === "employee") {
+        const statusGroup = document.createElement("div");
+        statusGroup.className = "tt-status-group";
+        Object.entries(STATUS).forEach(([key, v]) => {
+          const btn = document.createElement("button");
+          btn.className = "tt-status-pill" + (task.status === key ? " selected" : "");
+          if (task.status === key) {
+            if (key === "done") {
+              btn.style.background = v.color;
+              btn.style.color = "white";
+            } else {
+              btn.style.background = v.soft;
+              btn.style.color = v.color;
+            }
+          }
+          btn.innerHTML = `<i data-lucide="${v.icon}" size="13"></i>${v.label}`;
+          btn.addEventListener("click", () => setStatus(id, key));
+          statusGroup.appendChild(btn);
+        });
+        card.appendChild(statusGroup);
+      }
+
+      taskList.appendChild(card);
+    });
+    icons();
+  }
+</script>
+</body>
+</html>
